@@ -1,0 +1,78 @@
+group 'com.mylnikov'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext {
+        springBootVersion = '1.4.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/plugins-snapshot" }
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:0.6.0.BUILD-SNAPSHOT"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+    }
+}
+
+allprojects {
+    apply plugin: 'base'
+}
+
+subprojects { subproject ->
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+    version =  '0.1.0'
+    repositories {
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-release" }
+    }
+    dependencies {
+        compile("org.springframework.data:spring-yarn-boot:2.4.0.RELEASE")
+    }
+    task copyJars(type: Copy) {
+        from "$buildDir/libs"
+        into "$rootDir/yarn-dist/target/yarn-dist/"
+        include "**/*.jar"
+    }
+    assemble.doLast {copyJars.execute()}
+}
+
+project('yarn-client') {
+    apply plugin: 'spring-boot'
+}
+
+project('yarn-appmaster') {
+    apply plugin: 'spring-boot'
+}
+
+project('yarn-container') {
+    apply plugin: 'spring-boot'
+}
+
+project('yarn-dist') {
+    dependencies {
+        compile project(":yarn-client")
+        compile project(":yarn-appmaster")
+        compile project(":yarn-container")
+        testCompile("org.springframework.data:spring-yarn-boot-test:2.4.0.RELEASE")
+        testCompile("org.hamcrest:hamcrest-core:1.2.1")
+        testCompile("org.hamcrest:hamcrest-library:1.2.1")
+    }
+    test.dependsOn(':yarn-client:assemble')
+    test.dependsOn(':yarn-appmaster:assemble')
+    test.dependsOn(':yarn-container:assemble')
+    clean.doLast {ant.delete(dir: "target")}
+    jar.enabled = false
+}
+
+repositories {
+    mavenCentral()
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.0'
+}
