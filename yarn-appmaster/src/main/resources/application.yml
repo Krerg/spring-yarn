@@ -1,6 +1,6 @@
 spring:
     hadoop:
-        fsUri: hdfs://localhost:8020
+        fsUri: hdfs://localhost:9000
         resourceManagerHost: localhost
     yarn:
         appName: yarn-basic

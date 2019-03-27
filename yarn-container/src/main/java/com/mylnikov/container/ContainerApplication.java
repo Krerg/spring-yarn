@@ -14,8 +14,8 @@ public class ContainerApplication {
     }
 
     @Bean
-    public SearchTask helloPojo() {
-        return new SearchTask();
+    public FindTask helloPojo() {
+        return new FindTask();
     }
 
 }

@@ -31,7 +31,8 @@ subprojects { subproject ->
         maven { url "http://repo.spring.io/libs-release" }
     }
     dependencies {
-        compile("org.springframework.data:spring-yarn-boot:2.4.0.RELEASE")
+        compile("org.springframework.data:spring-yarn-boot:2.5.0.RELEASE")
+        compile("org.springframework.data:spring-data-hadoop-store:2.5.0.RELEASE")
     }
     task copyJars(type: Copy) {
         from "$buildDir/libs"
@@ -51,6 +52,14 @@ project('yarn-appmaster') {
 
 project('yarn-container') {
     apply plugin: 'spring-boot'
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.12'
+        testCompile group: 'org.springframework', name: 'spring-test', version: '4.3.20.RELEASE'
+        testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+
+    }
+
 }
 
 project('yarn-dist') {
@@ -58,9 +67,7 @@ project('yarn-dist') {
         compile project(":yarn-client")
         compile project(":yarn-appmaster")
         compile project(":yarn-container")
-        testCompile("org.springframework.data:spring-yarn-boot-test:2.4.0.RELEASE")
-        testCompile("org.hamcrest:hamcrest-core:1.2.1")
-        testCompile("org.hamcrest:hamcrest-library:1.2.1")
+
     }
     test.dependsOn(':yarn-client:assemble')
     test.dependsOn(':yarn-appmaster:assemble')
