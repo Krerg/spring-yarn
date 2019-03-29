@@ -15,3 +15,4 @@ spring:
             containerCount: 1
             launchcontext:
                 archiveFile: yarn-container-0.1.0.jar
+filePath: "/train.csv"

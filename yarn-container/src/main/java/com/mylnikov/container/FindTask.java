@@ -37,8 +37,8 @@ public class FindTask {
     /**
      * File name to parse.
      */
-    @Value("${fileName:train.csv}")
-    private String fileName;
+    @Value("${filePath}")
+    private String filePath;
 
     /**
      * Reads input file line by line and aggregates the hotels.
@@ -47,8 +47,8 @@ public class FindTask {
     public void findMostPopularHotels() throws Exception {
         log.info("FindTask started");
         init();
-        log.info("Getting file:" + fileName);
-        Path path = new Path("/" + fileName);
+        log.info("Getting file:" + filePath);
+        Path path = new Path("/" + filePath);
         LineReader lineReader = new LineReader(path.getFileSystem(configuration).open(path), (byte[]) null);
         log.info("File found");
         while (true) {
